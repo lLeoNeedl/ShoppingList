@@ -4,4 +4,6 @@
     <string name="et_name">Name:</string>
     <string name="et_count">Count:</string>
     <string name="button_save">Save</string>
+    <string name="error_input_name">The name cannot be blank</string>
+    <string name="error_input_count">Incorrect value</string>
 </resources>
