@@ -51,7 +51,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         shopListAdapter.onShopItemClickListener = {
-            Log.d(TAG, it.toString())
+            val intent = ShopItemActivity.newIntent(this, it.id)
+            startActivity(intent)
         }
 
         shopListAdapter.onShopItemLongClickListener = {
