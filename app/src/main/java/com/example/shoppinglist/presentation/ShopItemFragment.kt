@@ -3,6 +3,7 @@ package com.example.shoppinglist.presentation
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ class ShopItemFragment : Fragment() {
     private var shopItemId: Int = ShopItem.UNDEFINED_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("MyShopItemFragment", "onCreate")
         super.onCreate(savedInstanceState)
         try {
             parseParams()
@@ -75,7 +77,6 @@ class ShopItemFragment : Fragment() {
         }
     }
 
-
     private fun initViews(view: View) {
         tilName = view.findViewById(R.id.til_name)
         etName = view.findViewById(R.id.et_name)
@@ -105,7 +106,11 @@ class ShopItemFragment : Fragment() {
     }
 
     private fun launchAddMode() {
-        setupSaveButton()
+        saveButton.setOnClickListener {
+            val inputName = etName.text?.toString()
+            val inputCount = etCount.text?.toString()
+            shopItemViewModel.addShopItem(inputName, inputCount)
+        }
     }
 
     private fun launchEditMode() {
@@ -120,18 +125,6 @@ class ShopItemFragment : Fragment() {
             etName.setText(it.name)
             etCount.setText(it.count.toString())
         }
-        setupEditButton()
-    }
-
-    private fun setupSaveButton() {
-        saveButton.setOnClickListener {
-            val inputName = etName.text?.toString()
-            val inputCount = etCount.text?.toString()
-            shopItemViewModel.addShopItem(inputName, inputCount)
-        }
-    }
-
-    private fun setupEditButton() {
         saveButton.setOnClickListener {
             val inputName = etName.text?.toString()
             val inputCount = etCount.text?.toString()
