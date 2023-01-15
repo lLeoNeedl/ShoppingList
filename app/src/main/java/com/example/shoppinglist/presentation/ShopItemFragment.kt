@@ -1,5 +1,6 @@
 package com.example.shoppinglist.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -28,8 +29,18 @@ class ShopItemFragment : Fragment() {
     private var screenMode: String = MODE_UNKNOWN
     private var shopItemId: Int = ShopItem.UNDEFINED_ID
 
+    private lateinit var onEditFinishedListener: OnEditFinishedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditFinishedListener) {
+            onEditFinishedListener = context
+        } else {
+            throw RuntimeException("Activity must implement OnEditFinishedListener")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("MyShopItemFragment", "onCreate")
         super.onCreate(savedInstanceState)
         try {
             parseParams()
@@ -57,7 +68,6 @@ class ShopItemFragment : Fragment() {
         setupTextChangeListeners()
         observeLiveData()
     }
-
 
     private fun parseParams() {
         val args = requireArguments()
@@ -87,7 +97,7 @@ class ShopItemFragment : Fragment() {
 
     private fun observeLiveData() {
         shopItemViewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            onEditFinishedListener.onEditFinished()
         }
         shopItemViewModel.errorInputName.observe(viewLifecycleOwner) {
             if (it) {
@@ -158,7 +168,12 @@ class ShopItemFragment : Fragment() {
         )
     }
 
+    interface OnEditFinishedListener {
+        fun onEditFinished()
+    }
+
     companion object {
+        private const val TAG = "MyShopItemFragment"
         private const val SHOP_ITEM_ID = "shop_item_id"
         private const val SCREEN_MODE = "extra_mode"
         private const val MODE_ADD = "mode_add"

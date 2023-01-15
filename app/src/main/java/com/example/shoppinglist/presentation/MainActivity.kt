@@ -1,6 +1,7 @@
 package com.example.shoppinglist.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -10,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditFinishedListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
@@ -30,6 +31,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun initViews() {
+        buttonAddShopItem = findViewById(R.id.button_add_shop_item)
+    }
+
     private fun isOnePaneMode(): Boolean {
         return shopItemContainer == null
     }
@@ -40,10 +45,6 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.shop_item_container, fragment)
             .addToBackStack(null)
             .commit()
-    }
-
-    private fun initViews() {
-        buttonAddShopItem = findViewById(R.id.button_add_shop_item)
     }
 
     private fun setupRecyclerView() {
@@ -90,6 +91,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onEditFinished() {
+        Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
+    }
+
     private fun setupSwipeListener(rvShopList: RecyclerView) {
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             0,
@@ -110,9 +116,5 @@ class MainActivity : AppCompatActivity() {
             }
         })
         itemTouchHelper.attachToRecyclerView(rvShopList)
-    }
-
-    companion object {
-        private const val TAG = "MyMainActivity"
     }
 }
