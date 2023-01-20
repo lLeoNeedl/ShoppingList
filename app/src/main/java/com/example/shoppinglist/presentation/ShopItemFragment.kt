@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.shoppinglist.R
@@ -57,7 +58,6 @@ class ShopItemFragment : Fragment() {
         setupTextChangeListeners()
         observeLiveData()
     }
-
 
     private fun parseParams() {
         val args = requireArguments()
@@ -133,29 +133,12 @@ class ShopItemFragment : Fragment() {
     }
 
     private fun setupTextChangeListeners() {
-        etName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                shopItemViewModel.resetErrorInputName()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-            }
+        etName.addTextChangedListener(onTextChanged = { _, _, _, _ ->
+            shopItemViewModel.resetErrorInputName()
         })
-        etCount.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                shopItemViewModel.resetErrorInputCount()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-            }
-        }
-        )
+        etCount.addTextChangedListener(onTextChanged = { _, _, _, _ ->
+            shopItemViewModel.resetErrorInputCount()
+        })
     }
 
     companion object {
