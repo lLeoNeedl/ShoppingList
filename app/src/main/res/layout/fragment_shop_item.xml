@@ -33,7 +33,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/et_name"
                 android:inputType="textCapWords"
-                android:text="@{viewModel.shopItemLiveData.name}"
                 app:textChangeListener="@{() -> viewModel.resetErrorInputName()}" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -54,7 +53,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/et_count"
                 android:inputType="number"
-                android:text="@{String.valueOf(viewModel.shopItemLiveData.count)}"
                 app:textChangeListener="@{() -> viewModel.resetErrorInputCount()}" />
         </com.google.android.material.textfield.TextInputLayout>
 

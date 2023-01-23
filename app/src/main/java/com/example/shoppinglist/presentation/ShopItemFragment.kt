@@ -113,10 +113,10 @@ class ShopItemFragment : Fragment() {
         ) {
             Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
         }
-//        shopItemViewModel.shopItemLiveData.observe(viewLifecycleOwner) {
-//            binding.etName.setText(it.name)
-//            binding.etCount.setText(it.count.toString())
-//        }
+        shopItemViewModel.shopItemLiveData.observe(viewLifecycleOwner) {
+            binding.etName.setText(it.name)
+            binding.etCount.setText(it.count.toString())
+        }
         binding.saveButton.setOnClickListener {
             val inputName = binding.etName.text?.toString()
             val inputCount = binding.etCount.text?.toString()
