@@ -3,6 +3,7 @@ package com.example.shoppinglist.presentation
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.shoppinglist.data.ShopListRepositoryImpl
 import com.example.shoppinglist.domain.EditShopItemUseCase
 import com.example.shoppinglist.domain.GetShopListUseCase
@@ -23,24 +24,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val shopList = getShopListUseCase.getShopList()
 
-    private val scope = CoroutineScope(Dispatchers.IO)
-
 
     fun removeShopItem(shopItem: ShopItem) {
-        scope.launch {
+        viewModelScope.launch {
             removeShopItemUseCase.removeShopItem(shopItem)
         }
     }
 
     fun editShopItem(shopItem: ShopItem) {
         val newItem = shopItem.copy(enabled = !shopItem.enabled)
-        scope.launch {
+        viewModelScope.launch {
             editShopItemUseCase.editShopItem(newItem)
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        scope.cancel()
     }
 }
