@@ -12,24 +12,24 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         private const val DB_NAME = "shop_item.db"
-        private var db: AppDatabase? = null
+        private var INSTANCE: AppDatabase? = null
         private var lock = Any()
 
         fun getInstance(application: Application): AppDatabase {
-            db?.let {
+            INSTANCE?.let {
                 return it
             }
             synchronized(lock) {
-                db?.let {
+                INSTANCE?.let {
                     return it
                 }
-                val instance = Room.databaseBuilder(
+                val db = Room.databaseBuilder(
                     application,
                     AppDatabase::class.java,
                     DB_NAME
                 ).build()
-                db = instance
-                return instance
+                INSTANCE = db
+                return db
             }
         }
     }
