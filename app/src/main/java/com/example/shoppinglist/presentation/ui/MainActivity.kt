@@ -1,5 +1,6 @@
 package com.example.shoppinglist.presentation.ui
 
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -40,9 +41,27 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditFinishedListene
         val view = binding.root
         setContentView(view)
         setupRecyclerView()
+
         viewModel.shopList.observe(this) {
             shopListAdapter.submitList(it)
         }
+
+        binding.buttonAddShopItem.setOnClickListener {
+            if (isOnePaneMode()) {
+                val intent = ShopItemActivity.newIntentAddItem(this)
+                startActivity(intent)
+            } else {
+                launchFragment(ShopItemFragment.newInstanceAddItem())
+            }
+        }
+        contentResolver.query(
+            Uri.parse("content://com.example.shoppinglist/shop_items"),
+            null,
+            null,
+            null,
+            null,
+            null
+        )
     }
 
     private fun isOnePaneMode(): Boolean {
@@ -89,15 +108,6 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditFinishedListene
 
         shopListAdapter.onShopItemLongClickListener = {
             viewModel.editShopItem(it)
-        }
-
-        binding.buttonAddShopItem.setOnClickListener {
-            if (isOnePaneMode()) {
-                val intent = ShopItemActivity.newIntentAddItem(this)
-                startActivity(intent)
-            } else {
-                launchFragment(ShopItemFragment.newInstanceAddItem())
-            }
         }
     }
 
