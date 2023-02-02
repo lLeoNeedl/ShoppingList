@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditFinishedListene
             }
         }
         contentResolver.query(
-            Uri.parse("content://com.example.shoppinglist/shop_items"),
+            Uri.parse("content://com.example.shoppinglist/shop_items/"),
             null,
             null,
             null,
