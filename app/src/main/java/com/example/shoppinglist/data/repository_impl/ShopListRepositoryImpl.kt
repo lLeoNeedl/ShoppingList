@@ -1,20 +1,17 @@
-package com.example.shoppinglist.data
+package com.example.shoppinglist.data.repository_impl
 
-import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.example.shoppinglist.domain.ShopItem
-import com.example.shoppinglist.domain.ShopListRepository
-import kotlin.random.Random
+import com.example.shoppinglist.data.database.ShopListDao
+import com.example.shoppinglist.data.mapper.ShopListMapper
+import com.example.shoppinglist.domain.entities.ShopItem
+import com.example.shoppinglist.domain.repository.ShopListRepository
+import javax.inject.Inject
 
-class ShopListRepositoryImpl(
-    application: Application
+class ShopListRepositoryImpl @Inject constructor(
+    private val shopListDao: ShopListDao,
+    private val mapper: ShopListMapper
 ) : ShopListRepository {
-
-    private val shopListDao = AppDatabase.getInstance(application).shopListDao()
-    private val mapper = ShopListMapper()
 
     override suspend fun addShopItem(shopItem: ShopItem) {
         shopListDao.addShopItem(mapper.mapEntityToDbModel(shopItem))

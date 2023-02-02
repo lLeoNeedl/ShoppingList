@@ -1,4 +1,4 @@
-package com.example.shoppinglist.presentation
+package com.example.shoppinglist.presentation.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.ItemShopDisabledBinding
 import com.example.shoppinglist.databinding.ItemShopEnabledBinding
-import com.example.shoppinglist.domain.ShopItem
+import com.example.shoppinglist.domain.entities.ShopItem
+import javax.inject.Inject
 
-class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCallback()) {
+class ShopListAdapter @Inject constructor():
+    ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCallback()) {
 
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null

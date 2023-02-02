@@ -1,35 +1,67 @@
-package com.example.shoppinglist.presentation
+package com.example.shoppinglist.presentation.ui
 
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.ActivityMainBinding
-import com.example.shoppinglist.databinding.ActivityMainBindingImpl
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.shoppinglist.presentation.viewmodels.MainViewModel
+import com.example.shoppinglist.presentation.adapters.ShopListAdapter
+import com.example.shoppinglist.presentation.app.ShopListApplication
+import com.example.shoppinglist.presentation.viewmodels.ViewModelFactory
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditFinishedListener {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var viewModel: MainViewModel
-    private lateinit var shopListAdapter: ShopListAdapter
+    private val component by lazy {
+        (application as ShopListApplication).component
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+    }
+
+    @Inject
+    lateinit var shopListAdapter: ShopListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
         setupRecyclerView()
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+
         viewModel.shopList.observe(this) {
             shopListAdapter.submitList(it)
         }
+
+        binding.buttonAddShopItem.setOnClickListener {
+            if (isOnePaneMode()) {
+                val intent = ShopItemActivity.newIntentAddItem(this)
+                startActivity(intent)
+            } else {
+                launchFragment(ShopItemFragment.newInstanceAddItem())
+            }
+        }
+        contentResolver.query(
+            Uri.parse("content://com.example.shoppinglist/shop_items"),
+            null,
+            null,
+            null,
+            null,
+            null
+        )
     }
 
     private fun isOnePaneMode(): Boolean {
@@ -76,15 +108,6 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditFinishedListene
 
         shopListAdapter.onShopItemLongClickListener = {
             viewModel.editShopItem(it)
-        }
-
-        binding.buttonAddShopItem.setOnClickListener {
-            if (isOnePaneMode()) {
-                val intent = ShopItemActivity.newIntentAddItem(this)
-                startActivity(intent)
-            } else {
-                launchFragment(ShopItemFragment.newInstanceAddItem())
-            }
         }
     }
 

@@ -1,23 +1,19 @@
-package com.example.shoppinglist.presentation
+package com.example.shoppinglist.presentation.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.FragmentShopItemBinding
-import com.example.shoppinglist.domain.ShopItem
-import com.google.android.material.textfield.TextInputLayout
+import com.example.shoppinglist.domain.entities.ShopItem
+import com.example.shoppinglist.presentation.app.ShopListApplication
+import com.example.shoppinglist.presentation.viewmodels.ShopItemViewModel
+import com.example.shoppinglist.presentation.viewmodels.ViewModelFactory
+import javax.inject.Inject
 
 class ShopItemFragment : Fragment() {
 
@@ -25,7 +21,16 @@ class ShopItemFragment : Fragment() {
     private val binding: FragmentShopItemBinding
         get() = _binding ?: throw RuntimeException("FragmentShopItemBinding == null")
 
-    private lateinit var shopItemViewModel: ShopItemViewModel
+    private val component by lazy {
+        (requireActivity().application as ShopListApplication).component
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val shopItemViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[ShopItemViewModel::class.java]
+    }
 
     private var screenMode: String = MODE_UNKNOWN
     private var shopItemId: Int = ShopItem.UNDEFINED_ID
@@ -42,6 +47,7 @@ class ShopItemFragment : Fragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         try {
             parseParams()
@@ -61,7 +67,6 @@ class ShopItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        shopItemViewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
         binding.viewModel = shopItemViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
