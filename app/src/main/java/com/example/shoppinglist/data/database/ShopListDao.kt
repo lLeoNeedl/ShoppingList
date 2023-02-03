@@ -6,6 +6,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface ShopListDao {
@@ -24,6 +25,12 @@ interface ShopListDao {
 
     @Query("DELETE FROM shop_items WHERE id=:shopItemId")
     suspend fun deleteShopItem(shopItemId: Int)
+
+    @Query("DELETE FROM shop_items WHERE id=:shopItemId")
+    fun deleteShopItemSync(shopItemId: Int): Int
+
+    @Query("UPDATE shop_items SET name = :shopItemName WHERE id=:shopItemId")
+    fun updateShopItemSync(shopItemName: String, shopItemId: Int): Int
 
     @Query("SELECT * FROM shop_items WHERE id=:shopItemId LIMIT 1")
     suspend fun getShopItem(shopItemId: Int): ShopItemDbModel
