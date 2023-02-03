@@ -1,5 +1,6 @@
 package com.example.shoppinglist.presentation.ui
 
+import android.content.ContentValues
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -129,7 +130,17 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditFinishedListene
         }
 
         shopListAdapter.onShopItemLongClickListener = {
-            viewModel.editShopItem(it)
+//            viewModel.editShopItem(it)
+            thread {
+                contentResolver.update(
+                    Uri.parse("content://com.example.shoppinglist/shop_items/"),
+                    ContentValues().apply {
+                        put("name", "Breadly")
+                    },
+                    null,
+                    arrayOf(it.id.toString())
+                )
+            }
         }
     }
 
@@ -154,7 +165,15 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditFinishedListene
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val shopItem = shopListAdapter.currentList[position]
-                viewModel.removeShopItem(shopItem)
+//                viewModel.removeShopItem(shopItem)
+                thread {
+                    contentResolver.delete(
+                        Uri.parse("content://com.example.shoppinglist/shop_items/"),
+                        null,
+                        arrayOf(shopItem.id.toString())
+                    )
+                }
+
             }
         })
         itemTouchHelper.attachToRecyclerView(rvShopList)
