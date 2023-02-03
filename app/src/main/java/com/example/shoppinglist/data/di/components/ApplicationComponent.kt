@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.shoppinglist.data.di.annotations.ApplicationScope
 import com.example.shoppinglist.data.di.modules.DataModule
 import com.example.shoppinglist.data.di.modules.ViewModelModule
+import com.example.shoppinglist.data.providers.ShopListProvider
 import com.example.shoppinglist.presentation.ui.MainActivity
 import com.example.shoppinglist.presentation.ui.ShopItemFragment
 import dagger.BindsInstance
@@ -16,6 +17,8 @@ interface ApplicationComponent {
     fun inject(activity: MainActivity)
 
     fun inject(fragment: ShopItemFragment)
+
+    fun inject(provider: ShopListProvider)
 
     @Component.Factory
     interface ApplicationComponentFactory {
