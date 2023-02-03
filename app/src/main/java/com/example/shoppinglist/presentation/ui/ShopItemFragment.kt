@@ -1,6 +1,8 @@
 package com.example.shoppinglist.presentation.ui
 
+import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +16,7 @@ import com.example.shoppinglist.presentation.app.ShopListApplication
 import com.example.shoppinglist.presentation.viewmodels.ShopItemViewModel
 import com.example.shoppinglist.presentation.viewmodels.ViewModelFactory
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 class ShopItemFragment : Fragment() {
 
@@ -104,9 +107,20 @@ class ShopItemFragment : Fragment() {
 
     private fun launchAddMode() {
         binding.saveButton.setOnClickListener {
-            val inputName = binding.etName.text?.toString()
-            val inputCount = binding.etCount.text?.toString()
-            shopItemViewModel.addShopItem(inputName, inputCount)
+//            val inputName = binding.etName.text?.toString()
+//            val inputCount = binding.etCount.text?.toString()
+//            shopItemViewModel.addShopItem(inputName, inputCount)
+            thread {
+                context?.contentResolver?.insert(
+                    Uri.parse("content://com.example.shoppinglist/shop_items/"),
+                    ContentValues().apply {
+                        put("id", 0)
+                        put("name", binding.etName.text?.toString())
+                        put("count", binding.etCount.text?.toString()?.toInt())
+                        put("enabled", true)
+                    }
+                )
+            }
         }
     }
 
