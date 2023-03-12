@@ -130,17 +130,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditFinishedListene
         }
 
         shopListAdapter.onShopItemLongClickListener = {
-//            viewModel.editShopItem(it)
-            thread {
-                contentResolver.update(
-                    Uri.parse("content://com.example.shoppinglist/shop_items/"),
-                    ContentValues().apply {
-                        put("name", "Breadly")
-                    },
-                    null,
-                    arrayOf(it.id.toString())
-                )
-            }
+            viewModel.editShopItem(it)
         }
     }
 
