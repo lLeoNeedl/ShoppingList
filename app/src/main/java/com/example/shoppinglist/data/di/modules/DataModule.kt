@@ -20,7 +20,6 @@ interface DataModule {
 
     companion object {
         @Provides
-        @ApplicationScope
         fun provideShopListDao(application: Application): ShopListDao {
             return AppDatabase.getInstance(application).shopListDao()
         }
